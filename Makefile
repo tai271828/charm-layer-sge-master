@@ -5,10 +5,10 @@ export CHARM_BUILD_DIR := ${CHARM_BUILDING}/xenial
 # Makefile Targets
 deploy-clean-model: build
 	juju destroy-model sge-sandbox -y; juju add-model sge-sandbox; juju switch sge-sandbox
-	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME)
+	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME) --series xenial
 
 deploy: build
-	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME)
+	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME) --series xenial
 
 build: clean
 	tox -e build

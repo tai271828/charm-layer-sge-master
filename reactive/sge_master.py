@@ -1,7 +1,10 @@
+import subprocess as sp
+
 from charms.reactive import when, when_not, set_flag
 from charmhelpers.core.hookenv import application_version_set, status_set
 from charmhelpers.fetch import get_upstream_version
-import subprocess as sp
+
+import charms.sge_master
 
 @when_not('sge-master.installed')
 def install_sge_layer():
@@ -19,6 +22,10 @@ def install_sge_layer():
     set_flag('sge-master.installed')
 
 @when('apt.installed.gridengine-master')
+@when('apt.installed.gridengine-client')
+@when('apt.installed.gridengine-common')
+@when('apt.installed.gridengine-exec')
+@when('apt.installed.gridengine-qmon')
 def set_message_hello():
     # Set the upstream version of hello for juju status.
     application_version_set(get_upstream_version('gridengine-master'))
@@ -27,7 +34,7 @@ def set_message_hello():
     #message = sp.check_output('hello', stderr=sp.STDOUT)
 
     # Set the active status with the message
-    status_set('active', 'gridengine-master is installed' )
+    status_set('active', charms.sge_master.get_installed_message())
 
     # Signal that we know the version of hello
     #set_flag('hello.version.set')
