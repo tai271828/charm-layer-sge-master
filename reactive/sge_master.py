@@ -4,7 +4,7 @@ from charms.reactive import when, when_not, set_flag
 from charmhelpers.core.hookenv import application_version_set, status_set
 from charmhelpers.fetch import get_upstream_version
 
-import charms.sge_master
+import charms.layers.sge_master
 
 @when_not('sge-master.installed')
 def install_sge_layer():
