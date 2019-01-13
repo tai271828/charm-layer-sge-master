@@ -18,16 +18,17 @@ def install_sge_layer():
     #
     set_flag('sge-master.installed')
 
-@when('apt.installed.hello')
+@when('apt.installed.gridengine-master')
 def set_message_hello():
     # Set the upstream version of hello for juju status.
-    application_version_set(get_upstream_version('hello'))
+    application_version_set(get_upstream_version('gridengine-master'))
 
     # Run hello and get the message
-    message = sp.check_output('hello', stderr=sp.STDOUT)
+    #message = sp.check_output('hello', stderr=sp.STDOUT)
 
     # Set the active status with the message
-    status_set('active', message )
+    status_set('active', 'gridengine-master is installed' )
 
     # Signal that we know the version of hello
-    set_flag('hello.version.set')
+    #set_flag('hello.version.set')
+

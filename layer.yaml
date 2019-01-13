@@ -2,4 +2,9 @@ includes: ['layer:basic', 'layer:apt']  # if you use any interfaces, add them he
 options:
   apt:
     packages:
-      - hello
+      - gridengine-client
+      - gridengine-common
+      - gridengine-master
+      - gridengine-qmon
+      - gridengine-exec
+
