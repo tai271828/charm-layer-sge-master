@@ -4,6 +4,8 @@ CONF_HOSTLIST=${WORK_ROOT}/hostlist.conf
 CONF_SCHEDULER=${WORK_ROOT}/scheduler.conf
 CONF_QUEUE=${WORK_ROOT}/queue.conf
 
+qconf -as `hostname`
+
 mkdir -p ${WORK_ROOT}
 
 # create host list
