@@ -1,0 +1,1 @@
+qconf -as `hostname`
