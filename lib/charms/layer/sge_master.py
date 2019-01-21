@@ -27,7 +27,7 @@ def connect_sge_client(hostname_address):
 
 def add_worker(worker, slot=1):
     print("Add worker: {}".format(worker))
-    cmd = ['/usr/local/sbin/sge-init-conf.sh', 'homemade.q',  worker, str(slot)]
+    cmd = ['/usr/local/sbin/sge-add-work.sh', 'homemade.q',  worker, str(slot)]
     check_call(cmd)
 
 

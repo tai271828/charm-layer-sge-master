@@ -30,19 +30,19 @@ def install_sge_master():
 
 @when('endpoint.config-exchanger.new-exchanger')
 def update_client_config():
+    cmd = ['mkdir', '-p', '/usr/share/charm-sge-cluster/']
+    sp.check_call(cmd)
     client_config = endpoint_from_flag('endpoint.config-exchanger.new-exchanger')
     for client in client_config.exchangers():
         hookenv.log('client: {}'.format(client['hostname']))
 
-        cmd = ['mkdir', '-p', '/usr/share/charm-sge-cluster/']
-        sp.check_call(cmd)
         filename = '/usr/share/charm-sge-cluster/client_address'
         with open(filename, 'a') as fout:
             fout.write(client['hostname'] + "\n")
 
         sge_master.connect_sge_client(client['hostname'])
 
-        clear_flag('endpoint.config-exchanger.new-exchanger')
+    clear_flag('endpoint.config-exchanger.new-exchanger')
 
 
 @when('endpoint.config-exchanger.joined')
