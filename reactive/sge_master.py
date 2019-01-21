@@ -13,7 +13,7 @@ from charms.layer import sge_master
 @when('apt.installed.gridengine-exec')
 @when('apt.installed.gridengine-qmon')
 @when_not('sge-master.installed')
-def install_sge_layer():
+def install_sge_master():
     sge_master.bootstrap_pre_sge_master()
 
     # Set the upstream version of hello for juju status.
@@ -31,8 +31,8 @@ def install_sge_layer():
 @when('endpoint.master-config-provider.joined')
 def publish_host_info():
     endpoint_master = endpoint_from_flag('endpoint.master-config-provider.joined')
-    print(dir(hookenv))
-    print(hookenv.unit_public_ip())
-    print(hookenv.unit_private_ip())
+    #print(dir(hookenv))
+    #print(hookenv.unit_public_ip())
+    #print(hookenv.unit_private_ip())
     endpoint_master.publish_info(hookenv.unit_public_ip())
 
