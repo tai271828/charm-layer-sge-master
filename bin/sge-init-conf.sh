@@ -16,3 +16,5 @@ qconf -Ahgrp ${CONF_HOSTLIST}
 # create the queue
 qconf -Aq ${CONF_QUEUE}
 
+exit 0
+

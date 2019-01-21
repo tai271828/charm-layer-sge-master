@@ -1,10 +1,13 @@
-includes: ['layer:basic', 'layer:apt']  # if you use any interfaces, add them here
+includes:
+  - 'layer:basic'
+  - 'layer:apt'
+  - 'interface:sge-cluster'
 options:
   apt:
     packages:
-      - gridengine-master
-      - gridengine-client
-      - gridengine-common
-      - gridengine-exec
-      - gridengine-qmon
+    - gridengine-master
+    - gridengine-client
+    - gridengine-common
+    - gridengine-exec
+    - gridengine-qmon
 
