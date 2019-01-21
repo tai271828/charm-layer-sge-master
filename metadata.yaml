@@ -11,6 +11,6 @@ tags:
 series:
   - xenial
 provides:
-  master-config-provider:
+  config-exchanger:
     interface: sge-cluster
 

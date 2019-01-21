@@ -21,8 +21,13 @@ def bootstrap_pre_sge_master():
     check_call(cmd)
 
 
+def connect_sge_client(hostname_address):
+    add_worker(hostname_address)
+
+
 def add_worker(worker, slot=1):
-    cmd = ['/usr/local/sbin/sge-init-conf.sh', 'homemade.q',  worker, slot]
+    print("Add worker: {}".format(worker))
+    cmd = ['/usr/local/sbin/sge-init-conf.sh', 'homemade.q',  worker, str(slot)]
     check_call(cmd)
 
 
