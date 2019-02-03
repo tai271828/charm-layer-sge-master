@@ -14,6 +14,8 @@ from charms.layer import sge_master
 @when('apt.installed.gridengine-qmon')
 @when_not('sge-master.installed')
 def install_sge_master():
+    # workaround for MaaS cloud
+    sge_master.deb_719621_workaround(hookenv.unit_public_ip())
     sge_master.bootstrap_pre_sge_master()
 
     # Set the upstream version of hello for juju status.

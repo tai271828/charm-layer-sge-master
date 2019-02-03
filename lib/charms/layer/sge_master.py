@@ -34,3 +34,25 @@ def add_worker(worker, slot=1):
 def get_installed_message():
     return 'SGE master is installed'
 
+def deb_719621_workaround(host_address):
+    """
+    Apply the workaround for bug #719621 of deb distro.
+
+    Many deb-based distributions apply a workaround for bug #719621 by adding a
+    line to loopback FQDN with 127.0.1.1. The debian manual 5.1.1. The hostname
+    resolution suggests to use a permanent IP address if the IP is available.
+
+    This function will try to find out the workaround IP 127.0.1.1 and replace
+    the workaround IP with the target permanent IP. Otherwise SGE will be
+    confused with where to find out the master node when configuring queues
+    etc.
+    """
+    target_file = '/etc/hosts'
+    ip_old = '127.0.1.1'
+    ip_new = host_address
+    with open(target_file, 'rt') as fin:
+        text = fin.read().replace(ip_old, ip_new)
+
+    with open(target_file, 'wt') as fout:
+        fout.write(text)
+
