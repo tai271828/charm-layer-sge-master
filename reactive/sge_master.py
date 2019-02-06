@@ -12,6 +12,8 @@ from charms.layer import sge_master
 @when('apt.installed.gridengine-common')
 @when('apt.installed.gridengine-exec')
 @when('apt.installed.gridengine-qmon')
+@when('apt.installed.mpich')
+@when('apt.installed.nfs-kernel-server')
 @when_not('sge-master.installed')
 def install_sge_master():
     # workaround for MaaS cloud
