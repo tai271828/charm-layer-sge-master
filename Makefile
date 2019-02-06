@@ -1,6 +1,6 @@
 export CHARM_NAME := sge-master
-export CHARM_BUILDING := ./built-charms
-export CHARM_BUILD_DIR := ${CHARM_BUILDING}/xenial
+export CHARM_BUILDING := ../built-charms-sge-master
+export CHARM_BUILD_DIR := ${CHARM_BUILDING}
 
 # Makefile Targets
 deploy-clean-model: build
