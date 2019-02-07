@@ -4,6 +4,7 @@ from subprocess import check_call
 
 __all__ = ['bootstrap_pre_sge_master', 'get_installed_message']
 
+
 def bootstrap_pre_sge_master():
     # for MPI cluster
     # We make the SGE master is the head node of the cluster as well
@@ -38,6 +39,7 @@ def add_worker(worker, slot=1):
 def get_installed_message():
     return 'SGE master is installed'
 
+
 def deb_719621_workaround(host_address):
     """
     Apply the workaround for bug #719621 of deb distro.
@@ -60,10 +62,10 @@ def deb_719621_workaround(host_address):
     with open(target_file, 'wt') as fout:
         fout.write(text)
 
+
 def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
     cmd = ['ls', '/home/ubuntu']
     check_call(cmd)
 
     cmd = ['mkdir', '/home/ubuntu/' + dir_name]
     check_call(cmd)
-
