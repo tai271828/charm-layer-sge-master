@@ -1,3 +1,4 @@
+repo: 'https://github.com/tai271828/charm-layer-sge-master.git'
 includes:
   - 'layer:basic'
   - 'layer:apt'
