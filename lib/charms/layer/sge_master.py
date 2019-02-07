@@ -62,10 +62,19 @@ def deb_719621_workaround(host_address):
     with open(target_file, 'wt') as fout:
         fout.write(text)
 
+    # should be skipped because when juju add-relation
+    # the client grid engine will restart and it works
+    #restart_systemd_service(networking.service)
+
 
 def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
     cmd = ['ls', '/home/ubuntu']
     check_call(cmd)
 
     cmd = ['mkdir', '/home/ubuntu/' + dir_name]
+    check_call(cmd)
+
+
+def restart_systemd_service(service):
+    cmd = ['systemctl', 'restart', service]
     check_call(cmd)
