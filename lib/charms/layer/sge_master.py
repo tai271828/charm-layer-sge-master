@@ -5,7 +5,11 @@ from subprocess import check_call
 __all__ = ['bootstrap_pre_sge_master', 'get_installed_message']
 
 def bootstrap_pre_sge_master():
-    # prepare basic configuration files and scripts
+    # for MPI cluster
+    # We make the SGE master is the head node of the cluster as well
+    setup_nfs_server_dir()
+
+    # prepare basic configuration files and scripts for SGE master
     dir_bin = '/usr/local/sbin/'
     shutil.copy2('bin/sge-init-conf.sh', dir_bin)
     shutil.copy2('bin/sge-add-work.sh', dir_bin)
