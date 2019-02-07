@@ -68,11 +68,28 @@ def deb_719621_workaround(host_address):
 
 
 def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
-    cmd = ['ls', '/home/ubuntu']
+    dir_abs = '/home/ubuntu/' + dir_name
+    cmd = ['mkdir', dir_abs]
     check_call(cmd)
 
-    cmd = ['mkdir', '/home/ubuntu/' + dir_name]
+    cmd = ['chown', 'ubuntu', dir_abs]
     check_call(cmd)
+
+    lt = dir_abs + ' *(rw,sync,no_root_squash,no_subtree_check)'
+    insert_line_in_file(lt, '/etc/exports')
+
+    cmd = ['exportfs', '-a']
+    check_call(cmd)
+
+
+def insert_line_in_file(line_target, file_target):
+    with open(file_target, 'rt') as fin:
+        text = fin.read()
+
+    text = text + line_target + "\n"
+
+    with open(file_target, 'wt') as fout:
+        fout.write(text)
 
 
 def restart_systemd_service(service):
