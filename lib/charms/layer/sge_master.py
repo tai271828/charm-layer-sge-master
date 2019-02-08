@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess as sp
 from subprocess import check_call
 
 __all__ = ['bootstrap_pre_sge_master', 'get_installed_message']
@@ -28,6 +29,7 @@ def bootstrap_pre_sge_master():
 
 def connect_sge_client(hostname_address):
     add_worker(hostname_address)
+    _setup_mpi_cluster(hostname_address)
 
 
 def add_worker(worker, slot=1):
@@ -82,6 +84,46 @@ def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
     check_call(cmd)
 
 
+def _setup_mpi_cluster(address):
+    setup_ssh_key_over_nodes(address)
+
+
+def setup_ssh_key_over_nodes(address):
+    cmd = 'mkdir /home/ubuntu/.ssh; chmod 700 /home/ubuntu/.ssh/'
+    sp.run(cmd, shell=True)
+
+    cmd = 'ssh-keygen -t rsa -f /home/ubuntu/.ssh/id_rsa -N ""'
+    sp.run(cmd, shell=True)
+
+    cmd = 'cat /home/ubuntu/.ssh/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
+    sp.run(cmd, shell=True)
+
+    cmd = 'chmod 600 /home/ubuntu/.ssh/authorized_keys'
+    sp.run(cmd, shell=True)
+
+    cmd = 'sh-keyscan -t rsa localhost >> /home/ubuntu/.ssh/known_hosts'
+    sp.run(cmd, shell=True)
+
+    cmd = 'ssh-keyscan -t rsa 127.0.0.1 >> /home/ubuntu/.ssh/known_hosts'
+    sp.run(cmd, shell=True)
+
+    cmd = 'ssh-keyscan -t rsa ' + address + ' >> /home/ubuntu/.ssh/known_hosts'
+    sp.run(cmd, shell=True)
+
+    cmd = 'chown ubuntu -R /home/ubuntu/.ssh'
+    sp.run(cmd, shell=True)
+
+    # TODO: silliy and security concern method. change me later by publish_info
+    cmd = 'mkdir /home/ubuntu/mpi_nfs_mnt/keys; cp /home/ubuntu/.ssh/id_rsa* /home/ubuntu/mpi_nfs_mnt/keys/'
+    sp.run(cmd, shell=True)
+
+
+def get_public_key():
+    with open('/home/ubuntu/.ssh/id_rsa.pub', 'rt') as fin:
+        key = fin.read()
+    return key
+
+
 def insert_line_in_file(line_target, file_target):
     with open(file_target, 'rt') as fin:
         text = fin.read()
@@ -95,3 +137,4 @@ def insert_line_in_file(line_target, file_target):
 def restart_systemd_service(service):
     cmd = ['systemctl', 'restart', service]
     check_call(cmd)
+

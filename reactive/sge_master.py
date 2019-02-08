@@ -52,5 +52,5 @@ def update_client_config():
 @when('endpoint.config-exchanger.joined')
 def publish_host_info():
     endpoint_master = endpoint_from_flag('endpoint.config-exchanger.joined')
-    endpoint_master.publish_info(hookenv.unit_public_ip())
+    endpoint_master.publish_info(hostname=hookenv.unit_public_ip())
 
