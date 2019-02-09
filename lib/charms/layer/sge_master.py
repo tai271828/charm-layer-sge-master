@@ -2,6 +2,7 @@ import os
 import shutil
 import subprocess as sp
 from subprocess import check_call
+from charmhelpers.core import hookenv
 
 __all__ = ['bootstrap_pre_sge_master', 'get_installed_message']
 
@@ -86,6 +87,14 @@ def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
 
 def _setup_mpi_cluster(address):
     setup_ssh_key_over_nodes(address)
+    cmd = 'cp /usr/share/charm-sge-cluster/client_address /home/ubuntu/host_file'
+    sp.run(cmd, shell=True)
+
+    with open('/home/ubuntu/host_file', 'at') as fout:
+        fout.write(hookenv.unit_public_ip() + "\n")
+
+    with open('/etc/profile.d/mpi-host-file.sh', 'w') as fout:
+        fout.write('export MPI_HOSTS=/home/ubuntu/host_file' + "\n")
 
 
 def setup_ssh_key_over_nodes(address):
