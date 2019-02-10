@@ -10,7 +10,7 @@ __all__ = ['bootstrap_pre_sge_master', 'get_installed_message']
 def bootstrap_pre_sge_master():
     # for MPI cluster
     # We make the SGE master is the head node of the cluster as well
-    setup_nfs_server_dir()
+    _setup_nfs_server_dir()
 
     # prepare basic configuration files and scripts for SGE master
     dir_bin = '/usr/local/sbin/'
@@ -74,7 +74,7 @@ def deb_719621_workaround(host_address):
     # restart_systemd_service(networking.service)
 
 
-def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
+def _setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
     dir_abs = '/home/ubuntu/' + dir_name
     cmd = ['mkdir', dir_abs]
     check_call(cmd)
