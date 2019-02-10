@@ -95,8 +95,9 @@ def _setup_mpi_cluster():
     cmd = 'cp ' + source + ' ' + destination
     sp.run(cmd, shell=True)
 
-    with open('/home/ubuntu/host_file', 'at') as fout:
-        fout.write(hookenv.unit_public_ip() + "\n")
+    # We don't want the head/master node to be one of the MPI computing node
+    # with open('/home/ubuntu/host_file', 'at') as fout:
+    #     fout.write(hookenv.unit_public_ip() + "\n")
 
     # TODO: could be done for only once. no need to create this file each time
     with open('/etc/profile.d/mpi-host-file.sh', 'w') as fout:
