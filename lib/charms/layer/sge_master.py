@@ -29,11 +29,15 @@ def bootstrap_pre_sge_master():
 
 
 def connect_sge_client(hostname_address):
-    add_worker(hostname_address)
-    _setup_mpi_cluster(hostname_address)
+    _add_worker(hostname_address)
+    _setup_ssh_key_over_nodes(hostname_address)
 
 
-def add_worker(worker, slot=1):
+def aggregate_mpi_hosts():
+    _setup_mpi_cluster()
+
+
+def _add_worker(worker, slot=1):
     print("Add worker: {}".format(worker))
     cmd = ['/usr/local/sbin/sge-add-work.sh', 'homemade.q',  worker, str(slot)]
     check_call(cmd)
@@ -67,7 +71,7 @@ def deb_719621_workaround(host_address):
 
     # should be skipped because when juju add-relation
     # the client grid engine will restart and it works
-    #restart_systemd_service(networking.service)
+    # restart_systemd_service(networking.service)
 
 
 def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
@@ -85,26 +89,29 @@ def setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
     check_call(cmd)
 
 
-def _setup_mpi_cluster(address):
-    setup_ssh_key_over_nodes(address)
-    cmd = 'cp /usr/share/charm-sge-cluster/client_address /home/ubuntu/host_file'
+def _setup_mpi_cluster():
+    source = '/usr/share/charm-sge-cluster/client_address'
+    destination = '/home/ubuntu/host_file'
+    cmd = 'cp ' + source + ' ' + destination
     sp.run(cmd, shell=True)
 
     with open('/home/ubuntu/host_file', 'at') as fout:
         fout.write(hookenv.unit_public_ip() + "\n")
 
+    # TODO: could be done for only once. no need to create this file each time
     with open('/etc/profile.d/mpi-host-file.sh', 'w') as fout:
         fout.write('export MPI_HOSTS=/home/ubuntu/host_file' + "\n")
 
 
-def setup_ssh_key_over_nodes(address):
+def _setup_ssh_key_over_nodes(address):
     cmd = 'mkdir /home/ubuntu/.ssh; chmod 700 /home/ubuntu/.ssh/'
     sp.run(cmd, shell=True)
 
     cmd = 'ssh-keygen -t rsa -f /home/ubuntu/.ssh/id_rsa -N ""'
     sp.run(cmd, shell=True)
 
-    cmd = 'cat /home/ubuntu/.ssh/id_rsa.pub >> /home/ubuntu/.ssh/authorized_keys'
+    destination = '/home/ubuntu/.ssh/authorized_keys'
+    cmd = 'cat /home/ubuntu/.ssh/id_rsa.pub >> ' + destination
     sp.run(cmd, shell=True)
 
     cmd = 'chmod 600 /home/ubuntu/.ssh/authorized_keys'
@@ -123,7 +130,8 @@ def setup_ssh_key_over_nodes(address):
     sp.run(cmd, shell=True)
 
     # TODO: silliy and security concern method. change me later by publish_info
-    cmd = 'mkdir /home/ubuntu/mpi_nfs_mnt/keys; cp /home/ubuntu/.ssh/id_rsa* /home/ubuntu/mpi_nfs_mnt/keys/'
+    cmd = 'mkdir /home/ubuntu/mpi_nfs_mnt/keys; '
+    cmd = cmd + 'cp /home/ubuntu/.ssh/id_rsa* /home/ubuntu/mpi_nfs_mnt/keys/'
     sp.run(cmd, shell=True)
 
 

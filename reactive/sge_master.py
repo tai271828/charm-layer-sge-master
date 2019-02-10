@@ -36,15 +36,20 @@ def install_sge_master():
 def update_client_config():
     cmd = ['mkdir', '-p', '/usr/share/charm-sge-cluster/']
     sp.check_call(cmd)
-    client_config = endpoint_from_flag('endpoint.config-exchanger.new-exchanger')
-    for client in client_config.exchangers():
-        hookenv.log('client: {}'.format(client['hostname']))
+    cc = endpoint_from_flag('endpoint.config-exchanger.new-exchanger')
+    client_config = cc
 
-        filename = '/usr/share/charm-sge-cluster/client_address'
-        with open(filename, 'a') as fout:
+    filename = '/usr/share/charm-sge-cluster/client_address'
+    with open(filename, 'wt') as fout:
+        for client in client_config.exchangers():
+            hookenv.log('client: {}'.format(client['hostname']))
             fout.write(client['hostname'] + "\n")
 
-        sge_master.connect_sge_client(client['hostname'])
+            sge_master.connect_sge_client(client['hostname'])
+
+    # TODO: really bad implement, should refactor later to be logically
+    # consistent for function naming
+    sge_master.aggregate_mpi_hosts()
 
     clear_flag('endpoint.config-exchanger.new-exchanger')
 
