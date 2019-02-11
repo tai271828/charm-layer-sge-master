@@ -5,7 +5,7 @@ export CHARM_BUILD_DIR ?= ../../build
 # clean model deployement
 deploy-clean-model: build
 	juju destroy-model sge-sandbox -y; juju add-model sge-sandbox; juju switch sge-sandbox
-	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME) --series xenial
+	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME) --series xenial --constraints tags=virtual
 
 deploy: build
 	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME) --series xenial
