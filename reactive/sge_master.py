@@ -47,9 +47,7 @@ def update_client_config():
 
             sge_master.connect_sge_client(client['hostname'])
 
-    # TODO: really bad implement, should refactor later to be logically
-    # consistent for function naming
-    sge_master.aggregate_mpi_hosts()
+    sge_master.publish_mpi_hosts_info()
 
     clear_flag('endpoint.config-exchanger.new-exchanger')
 

@@ -2,9 +2,11 @@ import os
 import shutil
 import subprocess as sp
 from subprocess import check_call
-from charmhelpers.core import hookenv
 
 __all__ = ['bootstrap_pre_sge_master', 'get_installed_message']
+
+
+CLIENT_ADDRESS_PATH = '/usr/share/charm-sge-cluster/client_address'
 
 
 def bootstrap_pre_sge_master():
@@ -33,8 +35,11 @@ def connect_sge_client(hostname_address):
     _setup_ssh_key_over_nodes(hostname_address)
 
 
-def aggregate_mpi_hosts():
-    _setup_mpi_cluster()
+def publish_mpi_hosts_info():
+    source = CLIENT_ADDRESS_PATH
+    destination = '/home/ubuntu/mpi_nfs_mnt/host_file'
+    cmd = ['cp', source, destination]
+    sp.run(cmd)
 
 
 def _add_worker(worker, slot=1):
@@ -87,21 +92,6 @@ def _setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
 
     cmd = ['exportfs', '-a']
     check_call(cmd)
-
-
-def _setup_mpi_cluster():
-    source = '/usr/share/charm-sge-cluster/client_address'
-    destination = '/home/ubuntu/host_file'
-    cmd = 'cp ' + source + ' ' + destination
-    sp.run(cmd, shell=True)
-
-    # We don't want the head/master node to be one of the MPI computing node
-    # with open('/home/ubuntu/host_file', 'at') as fout:
-    #     fout.write(hookenv.unit_public_ip() + "\n")
-
-    # TODO: could be done for only once. no need to create this file each time
-    with open('/etc/profile.d/mpi-host-file.sh', 'w') as fout:
-        fout.write('export MPI_HOSTS=/home/ubuntu/host_file' + "\n")
 
 
 def _setup_ssh_key_over_nodes(address):
