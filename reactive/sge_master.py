@@ -7,7 +7,7 @@ from charmhelpers.fetch import get_upstream_version
 from charms.layer import sge_master
 
 
-CLIENT_ADDRESS_PATH = '/home/ubuntu/mpi_nfs_mnt/host_file'
+CLIENT_ADDRESS_PATH = '/home/ubuntu/mpi_host_list'
 
 
 @when('apt.installed.gridengine-master')
@@ -37,8 +37,8 @@ def install_sge_master():
 
 @when('endpoint.config-exchanger.new-exchanger')
 def update_client_config():
-    cmd = ['mkdir', '-p', '/usr/share/charm-sge-cluster/']
-    sp.check_call(cmd)
+    #cmd = ['mkdir', '-p', '/usr/share/charm-sge-cluster/']
+    #sp.check_call(cmd)
     cc = endpoint_from_flag('endpoint.config-exchanger.new-exchanger')
     client_config = cc
 

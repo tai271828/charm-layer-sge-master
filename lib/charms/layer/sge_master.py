@@ -12,7 +12,7 @@ CLIENT_ADDRESS_PATH = '/usr/share/charm-sge-cluster/client_address'
 def bootstrap_pre_sge_master():
     # for MPI cluster
     # We make the SGE master is the head node of the cluster as well
-    _setup_nfs_server_dir()
+    _setup_nfs_server_dir('/home/ubuntu')
 
     # prepare basic configuration files and scripts for SGE master
     dir_bin = '/usr/local/sbin/'
@@ -79,9 +79,8 @@ def deb_719621_workaround(host_address):
     # restart_systemd_service(networking.service)
 
 
-def _setup_nfs_server_dir(dir_name='mpi_nfs_mnt'):
-    dir_abs = '/home/ubuntu/' + dir_name
-    cmd = ['mkdir', dir_abs]
+def _setup_nfs_server_dir(dir_abs='/home/ubuntu/mpi_nfs_mnt'):
+    cmd = ['mkdir', '-p', dir_abs]
     check_call(cmd)
 
     cmd = ['chown', 'ubuntu', dir_abs]
@@ -125,7 +124,7 @@ def _setup_ssh_key_over_nodes(address):
     cmd = cmd + 'cp /home/ubuntu/.ssh/id_rsa* /home/ubuntu/mpi_nfs_mnt/keys/'
     sp.run(cmd, shell=True)
 
-
+# TODO: the following are helpers, Put them into another module
 def get_public_key():
     with open('/home/ubuntu/.ssh/id_rsa.pub', 'rt') as fin:
         key = fin.read()
