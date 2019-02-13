@@ -20,7 +20,7 @@ CLIENT_ADDRESS_PATH = '/home/ubuntu/mpi_host_list'
 @when_not('sge-master.installed')
 def install_sge_master():
     # workaround for MaaS cloud
-    sge_master.deb_719621_workaround(hookenv.unit_public_ip())
+    sge_master.deb_719621_workaround(hookenv.unit_private_ip())
     sge_master.bootstrap_pre_sge_master()
 
     # Set the upstream version of hello for juju status.
@@ -61,7 +61,7 @@ def update_client_config():
 @when('endpoint.config-exchanger.joined')
 def publish_host_info():
     endpoint_master = endpoint_from_flag('endpoint.config-exchanger.joined')
-    endpoint_master.publish_info(hostname=hookenv.unit_public_ip())
+    endpoint_master.publish_info(hostname=hookenv.unit_private_ip())
 
 
 @when('sge-master.mpi-cluster.host-info.published')
