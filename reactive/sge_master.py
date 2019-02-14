@@ -1,5 +1,4 @@
-import subprocess as sp
-from charms.reactive import when, when_not, set_flag, clear_flag, get_flags
+from charms.reactive import when, when_not, set_flag, clear_flag
 from charms.reactive.relations import endpoint_from_flag
 from charmhelpers.core import hookenv
 from charmhelpers.core.hookenv import application_version_set, status_set
@@ -37,31 +36,37 @@ def install_sge_master():
 
 @when('endpoint.config-exchanger.new-exchanger')
 def update_client_config():
-    #cmd = ['mkdir', '-p', '/usr/share/charm-sge-cluster/']
-    #sp.check_call(cmd)
     cc = endpoint_from_flag('endpoint.config-exchanger.new-exchanger')
     client_config = cc
 
+    # client addresses are used for MPI cluster, which should be private IPs
+    # when using public cloud.
+    # When using MaaS cloud in my case, the private and public IPs are the
+    # same.
     with open(CLIENT_ADDRESS_PATH, 'wt') as fout:
         for client in client_config.exchangers():
-            hookenv.log('client: {}'.format(client['hostname']))
-            fout.write(client['hostname'] + "\n")
+            hookenv.log('client: {}'.format(client['unit_private_ip']))
+            fout.write(client['unit_private_ip'] + "\n")
 
-            sge_master.connect_sge_client(client['hostname'])
+            sge_master.connect_sge_client(client['unit_public_ip'])
 
     sge_master.publish_mpi_hosts_info()
     set_flag('sge-master.mpi-cluster.host-info.published')
     hookenv.log('Set flag: sge-master.mpi-cluster.host-info.published')
-    all_flags = get_flags()
-    hookenv.log('All flags now: {}'.format(all_flags))
 
     clear_flag('endpoint.config-exchanger.new-exchanger')
 
 
 @when('endpoint.config-exchanger.joined')
-def publish_host_info():
+def publish_host_public_address():
     endpoint_master = endpoint_from_flag('endpoint.config-exchanger.joined')
-    endpoint_master.publish_info(hostname=hookenv.unit_private_ip())
+    endpoint_master.publish_info_public_ip(hookenv.unit_public_ip())
+
+
+@when('endpoint.config-exchanger.joined')
+def publish_host_private_address():
+    endpoint_master = endpoint_from_flag('endpoint.config-exchanger.joined')
+    endpoint_master.publish_info_private_ip(hookenv.unit_private_ip())
 
 
 @when('sge-master.mpi-cluster.host-info.published')

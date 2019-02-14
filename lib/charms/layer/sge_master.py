@@ -124,6 +124,7 @@ def _setup_ssh_key_over_nodes(address):
     cmd = cmd + 'cp /home/ubuntu/.ssh/id_rsa* /home/ubuntu/mpi_nfs_mnt/keys/'
     sp.run(cmd, shell=True)
 
+
 # TODO: the following are helpers, Put them into another module
 def get_public_key():
     with open('/home/ubuntu/.ssh/id_rsa.pub', 'rt') as fin:
