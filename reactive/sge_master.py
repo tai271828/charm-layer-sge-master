@@ -48,7 +48,7 @@ def update_client_config():
             hookenv.log('client: {}'.format(client['unit_private_ip']))
             fout.write(client['unit_private_ip'] + "\n")
 
-            sge_master.connect_sge_client(client['unit_public_ip'])
+            sge_master.connect_sge_client(client['unit_private_ip'])
 
     sge_master.publish_mpi_hosts_info()
     set_flag('sge-master.mpi-cluster.host-info.published')
