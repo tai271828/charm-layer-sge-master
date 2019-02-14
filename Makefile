@@ -13,6 +13,10 @@ deploy-clean-model: build
 
 redeploy-model:
 	juju destroy-model sge-sandbox -y; juju add-model sge-sandbox; juju switch sge-sandbox
+	# to support GCE (LP: #1761838). for maas it does not matter to tweak
+	# the model in this way or not. btw you may want to use --constraints
+	# tags=virtual for MaaS cloud.
+	juju model-config fan-config="" container-networking-method=""
 	juju deploy $(CHARM_BUILD_DIR)/$(CHARM_NAME) --series xenial
 
 deploy: build
