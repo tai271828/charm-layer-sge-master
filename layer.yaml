@@ -13,4 +13,5 @@ options:
     - gridengine-qmon
     - mpich
     - nfs-kernel-server
+    - libarchive-dev
 

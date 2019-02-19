@@ -16,11 +16,13 @@ CLIENT_ADDRESS_PATH = '/home/ubuntu/mpi_host_list'
 @when('apt.installed.gridengine-qmon')
 @when('apt.installed.mpich')
 @when('apt.installed.nfs-kernel-server')
+@when('apt.installed.libarchive-dev')
 @when_not('sge-master.installed')
 def install_sge_master():
     # workaround for MaaS cloud
     sge_master.deb_719621_workaround(hookenv.unit_private_ip())
     sge_master.bootstrap_pre_sge_master()
+    sge_master.build_singularity()
 
     # Set the upstream version of hello for juju status.
     application_version_set(get_upstream_version('gridengine-master'))

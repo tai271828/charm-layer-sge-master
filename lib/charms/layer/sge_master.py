@@ -35,6 +35,13 @@ def connect_sge_client(hostname_address):
     _setup_ssh_key_over_nodes(hostname_address)
 
 
+def build_singularity():
+    dir_bin = '/usr/local/sbin/'
+    shutil.copy2('bin/build-singularity.sh', dir_bin)
+    cmd = '/usr/local/sbin/build-singularity.sh'
+    sp.run(cmd)
+
+
 def publish_mpi_hosts_info():
     source = CLIENT_ADDRESS_PATH
     destination = '/home/ubuntu/mpi_nfs_mnt/host_file'
