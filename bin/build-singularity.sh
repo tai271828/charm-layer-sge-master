@@ -7,4 +7,4 @@ cd singularity-$VERSION
 make
 make install
 
-singularity pull shub://tai271828/solvcon:1.0.0-0.1.4+
+singularity pull shub://tai271828/solvcon:1.0.0-0.1.4+ /home/ubuntu/
